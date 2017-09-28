@@ -1,0 +1,44 @@
+resolver: lts-8.3
+
+packages:
+- '.'
+- location:
+    #
+    # FIXME: once we merge geth1.6 into master in quorum-tools, change this back to the jpmorganchase repo. It seems that stack has a problem here where it checks out master.
+    #
+    git: https://github.com/bts/quorum-tools.git
+    commit: 215c5ebbfcb8001ae9644c27b80267eccc4e0c16
+  extra-dep: true
+#
+# FIXME: duplicated from quorum-tools:
+#
+- location:
+    git: https://github.com/joelburget/symmetric-properties.git
+    commit: ce2a00df46751896966482b9beeadb1220fda575
+  extra-dep: true
+#
+# FIXME: duplicated from quorum-tools:
+#
+- location:
+    git: https://github.com/jpmorganchase/constellation.git
+    commit: 67707bb2ad82e58390a279b77f6e23a7a05a7f97
+  extra-dep: true
+
+#
+# FIXME: duplicated from quorum-tools:
+#
+extra-deps:
+- rate-limit-1.1.1
+- time-units-1.0.0
+- vector-0.12.0.0
+- wreq-0.5.0.1
+- authenticate-oauth-1.5.1.2
+- aeson-1.1.0.0
+- BerkeleyDB-0.8.7        # constellation
+- logging-3.0.4           # constellation
+- saltine-0.0.0.5         # constellation
+- cryptonite-0.22         # constellation
+
+flags: {}
+
+extra-package-dbs: []
