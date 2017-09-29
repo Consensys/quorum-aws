@@ -1,0 +1,7 @@
+[submodule "build/constellation"]
+	path = build/constellation
+	url = https://github.com/jpmorganchase/constellation.git
+[submodule "build/quorum"]
+	path = build/quorum
+	url = https://github.com/jpmorganchase/quorum.git
+	branch = geth1.6
