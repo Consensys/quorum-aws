@@ -1,0 +1,18 @@
+#!/bin/sh
+
+set -euo pipefail
+
+echo "building quorum-aws locally"
+stack setup
+stack build
+
+echo "building quorum-aws for AWS"
+docker build .
+
+echo "building quorum"
+docker build ./dependencies/quorum
+
+echo "building constellation"
+docker build -f ./dependencies/constellation/build-fedora.dockerfile --build-arg DISTRO_VERSION=26 ./dependencies/constellation
+
+echo "done building packages"
