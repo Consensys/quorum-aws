@@ -7,14 +7,7 @@ packages:
     # FIXME: once we merge geth1.6 into master in quorum-tools, change this back to the jpmorganchase repo. It seems that stack has a problem here where it checks out master.
     #
     git: https://github.com/bts/quorum-tools.git
-    commit: 215c5ebbfcb8001ae9644c27b80267eccc4e0c16
-  extra-dep: true
-#
-# FIXME: duplicated from quorum-tools:
-#
-- location:
-    git: https://github.com/joelburget/symmetric-properties.git
-    commit: ce2a00df46751896966482b9beeadb1220fda575
+    commit: 4008858626caeebc3ab14c74e69f7b72cf179e6b
   extra-dep: true
 #
 # FIXME: duplicated from quorum-tools:
@@ -28,6 +21,7 @@ packages:
 # FIXME: duplicated from quorum-tools:
 #
 extra-deps:
+- symmetric-properties-0.1.0.0
 - rate-limit-1.1.1
 - time-units-1.0.0
 - vector-0.12.0.0
