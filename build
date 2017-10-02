@@ -7,12 +7,12 @@ stack setup
 stack build
 
 echo "building quorum-aws for AWS"
-docker build .
+docker build -t quorum-aws .
 
 echo "building quorum"
-docker build ./dependencies/quorum
+docker build -t quorum ./dependencies/quorum
 
 echo "building constellation"
-docker build -f ./dependencies/constellation/build-fedora.dockerfile --build-arg DISTRO_VERSION=26 ./dependencies/constellation
+docker build -t constellation -f ./dependencies/constellation/build-fedora.dockerfile --build-arg DISTRO_VERSION=26 ./dependencies/constellation
 
 echo "done building packages"
