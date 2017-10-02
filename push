@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Pushes built images to AWS' ECR (Elastic Container Registry).
+#
+# Requires aws-cli, jq, and docker.
 
 #
 # NOTE: While running this script, if
