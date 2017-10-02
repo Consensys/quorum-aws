@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Pushes built images to AWS' ECR (Elastic Container Registry).
+
+#
+# NOTE: While running this script, if
+#
+#    (1) aws-cli says that it doesn't recognize `--no-include-email`
+# or (2) docker requires an email (via `-e`)
+#
+# then update both aws-cli and docker and try running this again.
+#
+
+set -euo pipefail
+
+REGION=us-east-1
+IMAGES=(quorum constellation quorum-aws)
+
+# Authenticate docker client with ECR:
+eval `aws ecr get-login --region ${REGION} --no-include-email` >/dev/null
+
+existing_repository() {
+    name=$1
+
+    (aws ecr describe-repositories --repository-names "$name" 2>/dev/null | jq -r '.repositories[0].repositoryUri') || echo ""
+}
+
+create_repository() {
+    name=$1
+
+    aws ecr create-repository --repository-name "${image}" | jq -r '.repository.repositoryUri'
+}
+
+# Tag and push each image:
+for image in ${IMAGES[@]}
+do
+  echo "pushing $image"
+
+  echo "  checking for existing ${image} repository"
+  repository=$(existing_repository $image)
+
+  if [[ -z "$repository" ]]
+  then
+    echo "  existing repository not found. creating new repository"
+    repository=$(create_repository $image)
+    echo "  created repository ${image}"
+  else
+    echo "  existing repository is $repository"
+  fi
+
+  echo "  tagging image $image"
+  docker tag ${image}:latest ${repository}:latest
+  echo "  pushing image $image to ECR"
+  docker push ${repository}:latest
+  echo "  done"
+  echo
+done
