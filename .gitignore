@@ -1,0 +1,3 @@
+terraform/cluster-data/
+terraform/secrets/*
+terraform/state/*
