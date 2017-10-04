@@ -1,0 +1,95 @@
+#!/bin/bash
+
+set -euo pipefail
+
+SSH_KEY_NAME="quorum-cluster"
+SSH_KEY_PATH="secrets/${SSH_KEY_NAME}.pem" # private key path
+SECRET_TF_FILE="secrets/terraform.tfvars"
+TUNNEL_KEY_NAME="tunnel"
+TUNNEL_KEY_PATH="secrets/${TUNNEL_KEY_NAME}" # private key path
+
+die() {
+    echo >&2 "$@"
+    exit 1
+}
+
+print_usage() {
+    die "usage: $0 [plan|apply|show|console|refresh|destroy|output[ output-name]|taint resource-name|untaint resource-name]"
+}
+
+check_for_aws_creds() {
+    test -e "${SECRET_TF_FILE}"
+}
+
+check_ssh_key_exists() {
+    test -e "${SSH_KEY_PATH}"
+}
+
+generate_ssh_key() {
+    echo "generating ec2 SSH key: ${SSH_KEY_PATH}"
+    aws ec2 create-key-pair --key-name "${SSH_KEY_NAME}" | jq -r ".KeyMaterial" >${SSH_KEY_PATH}
+    chmod 400 ${SSH_KEY_PATH}
+}
+
+check_ssh_key_added() {
+    ssh-add -l | grep "${SSH_KEY_NAME}" >/dev/null
+}
+
+add_ssh_key() {
+    echo "SSH key not found in agent. trying to use ssh-add to add ${SSH_KEY_NAME}..."
+    ssh-add "${SSH_KEY_PATH}"
+}
+
+check_tunnel_key_exists() {
+    test -e "${TUNNEL_KEY_PATH}"
+}
+
+generate_tunnel_key() {
+    echo "generating tunnel SSH key: ${TUNNEL_KEY_PATH}"
+    ssh-keygen -t ed25519 -N "" -C "quorum ssh tunnels" -f "${TUNNEL_KEY_PATH}"
+}
+
+[ "$#" -eq 0 ] && print_usage
+
+check_for_aws_creds     || die "please create the file secrets/terraform.fvars. see secrets/terraform.tfvars.example for an example."
+check_ssh_key_exists    || generate_ssh_key
+check_ssh_key_added     || add_ssh_key
+check_tunnel_key_exists || generate_tunnel_key
+
+# Set up variables
+
+bin_name=$(basename $0)
+bin_components=(${bin_name//-/ }) # Split binary name on a dash
+num_components=${#bin_components[@]}
+
+if [ ${num_components} -eq 2 ]
+then
+    env_name=${bin_components[0]}
+    region=${bin_components[1]}
+    state_file="$(pwd)/state/${env_name}-${region}.tfstate"
+    var_file_flag="-var-file $(pwd)/multi-region-vars/${region}.tfvars"
+else
+    env_name=${bin_name}
+    state_file="$(pwd)/state/${env_name}.tfstate"
+    var_file_flag=""
+
+    if [[ "${env_name}" == "global" ]]
+    then
+        cd global
+    fi
+fi
+
+# Process command
+
+if [[ "$1" == "plan" || "$1" == "apply" || "$1" == "destroy" || "$1" == "console" || "$1" == "refresh" ]]
+then
+    terraform $1 -var "env=${env_name}" ${var_file_flag} -state ${state_file}
+elif [[ "$1" == "output" || "$1" == "taint" || "$1" == "untaint" ]]
+then
+    terraform $1 -state ${state_file} $2
+elif [[ "$1" == "show" ]]
+then
+    terraform show ${state_file}
+else
+    print_usage
+fi
