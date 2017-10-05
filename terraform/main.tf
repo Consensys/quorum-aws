@@ -203,7 +203,7 @@ resource "aws_instance" "quorum" {
 
   tags {
     Project = "${var.project}"
-    Name = "${var.project} ${var.env} quorum ${count.index + 1}"
+    Name = "${var.project} ${var.env} node ${count.index + 1}"
     Environment = "${var.env}"
     Terraformed = "true"
   }
