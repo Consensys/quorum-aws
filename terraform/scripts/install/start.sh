@@ -13,7 +13,7 @@ if [[ $cluster_type == "multi-region" ]]
 then
     if [[ $(ps aux | grep [t]unnel | wc -l) -eq 0 ]]
     then
-        die "it looks like tunnels have not been started yet for this multi-region cluster. on the external provisioning machine, once all regions have been provisioned, execute ./start-tunnels, and then try starting the cluster again."
+        die "it looks like tunnels have not been started yet for this multi-region cluster. on the external provisioning machine, once all regions have been provisioned, execute multi-start."
     fi
 fi
 

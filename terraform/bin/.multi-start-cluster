@@ -10,7 +10,7 @@ die() {
 }
 
 print_usage() {
-    die "usage: start-cluster [CLUSTER_NAME]"
+    die "usage: multi-start-cluster [CLUSTER_NAME]"
 }
 
 [ "$#" -ne 1 ] && print_usage

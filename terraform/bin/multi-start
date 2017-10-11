@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -euo pipefail
+
+die() {
+    echo >&2 "$@"
+    exit 1
+}
+
+print_usage() {
+    die "usage: multi-start [MULTI-REGION-ENV-NAME]"
+}
+
+[ "$#" -ne 1 ] && print_usage
+
+env=$1
+
+.multi-start-tunnels $env
+.multi-start-cluster $env
