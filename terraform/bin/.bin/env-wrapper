@@ -69,9 +69,14 @@ generate_tunnel_key() {
     ssh-keygen -t ed25519 -N "" -C "quorum ssh tunnels" -f "${tunnel_key_path}"
 }
 
-check_for_aws_creds     || die "please create the file secrets/terraform.fvars. see secrets/terraform.tfvars.example for an example."
-check_ssh_key_exists    || generate_ssh_key
-ensure_ssh_key_added
+check_for_aws_creds || die "please create the file secrets/terraform.fvars. see secrets/terraform.tfvars.example for an example."
+
+if [[ "${env_name}" != "global" ]]
+then
+    check_ssh_key_exists || generate_ssh_key
+    ensure_ssh_key_added
+fi
+
 check_tunnel_key_exists || generate_tunnel_key
 
 # Process command
