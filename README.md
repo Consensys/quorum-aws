@@ -97,6 +97,6 @@ Once all three regions have been provisioned, we need to start the cluster. In s
 
 At this point, we should be able to log in to one of the nodes and see the cluster in action:
 
-- `ssh ubuntu@(bin/intl-virginia output eip)`
+- `ssh ubuntu@(bin/intl-virginia output eip)` where `eip` stands for Elastic IP, the static IP address other nodes in the cluster can use to connect to this one.
 - `./spam 10` send in 10 transactions per second for a few seconds, then `^C` to stop it
 - `./follow` shows the end of the (`tail -f`/followed) `geth` log, or `./attach` attaches to the local node.
