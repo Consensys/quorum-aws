@@ -176,6 +176,11 @@ resource "null_resource" "cluster_datadirs" {
   }
 }
 
+resource "aws_key_pair" "quorum" {
+  key_name = "${var.ssh_keypair_prefix}${var.env}"
+  public_key = "${file("secrets/ec2-keys/${var.ssh_keypair_prefix}${var.env}.pub")}"
+}
+
 resource "aws_instance" "quorum" {
   count = "${var.num_instances}"
   depends_on = ["null_resource.cluster_datadirs"]
@@ -187,7 +192,7 @@ resource "aws_instance" "quorum" {
   # NOTE: rpc_sender is in this list temporarily, until we provision nodes that are dedicated to send txes
   #
   vpc_security_group_ids = ["${aws_security_group.quorum_instance.id}", "${aws_security_group.ssh_open.id}", "${aws_security_group.rpc_sender.id}"]
-  key_name = "${var.ssh_keypair_name}"
+  key_name = "${var.ssh_keypair_prefix}${var.env}"
   associate_public_ip_address = true
 
   availability_zone = "${element(aws_subnet.subnet.*.availability_zone, count.index % length(aws_subnet.subnet.*.id))}"
@@ -212,7 +217,7 @@ resource "aws_instance" "quorum" {
     user = "${var.remote_user}"
     host = "${self.public_ip}"
     timeout = "1m"
-    key_file = "${var.pem_file}"
+    key_file = "secrets/ec2-keys/${var.ssh_keypair_prefix}${var.env}.pem"
   }
 
   provisioner "file" {
@@ -245,11 +250,35 @@ resource "aws_instance" "quorum" {
     destination = "${var.remote_homedir}/follow"
   }
 
+  provisioner "file" {
+    source = "scripts/install/start-tunnels.sh"
+    destination = "${var.remote_homedir}/.start-tunnels"
+  }
+
+  provisioner "file" {
+    source = "scripts/install/start-constellation.sh"
+    destination = "${var.remote_homedir}/.start-constellation"
+  }
+
+  provisioner "file" {
+    source = "scripts/install/start-quorum.sh"
+    destination = "${var.remote_homedir}/.start-quorum"
+  }
+
+  provisioner "file" {
+    source = "scripts/install/start.sh"
+    destination = "${var.remote_homedir}/start"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "chmod +x spam",
       "chmod +x attach",
       "chmod +x follow",
+      "chmod +x .start-tunnels",
+      "chmod +x .start-constellation",
+      "chmod +x .start-quorum",
+      "chmod +x start",
       "echo '${var.first_geth_id + count.index}' >node-id",
       "echo 'abcd' >password",
       "echo '${var.multi_region ? "multi-region" : "single-region"}' >cluster-type",
@@ -261,15 +290,22 @@ resource "aws_instance" "quorum" {
     scripts = [
       "scripts/provision/prepare.sh",
       "scripts/provision/fetch-images.sh",
-      "scripts/provision/possibly-start-tunnels.sh",
-      "scripts/provision/start-constellation.sh",
-      "scripts/provision/start-quorum.sh"
+      "scripts/provision/start-single-region-cluster.sh"
     ]
   }
 }
 
+#
+# If this is a multi-region cluster, we allocate an EIP for each instance in the region
+#
+
+resource "aws_eip" "static_ip" {
+  count = "${ var.multi_region ? "${var.num_instances}" : "0"}"
+  vpc = true
+}
+
 resource "aws_eip_association" "quorum_eip_association" {
-  count = "${length(var.quorum_eip_ids)}"
+  count = "${ var.multi_region ? "${var.num_instances}" : "0"}"
   instance_id = "${element(aws_instance.quorum.*.id, count.index)}"
-  allocation_id = "${element(var.quorum_eip_ids, count.index)}"
+  allocation_id = "${element(aws_eip.static_ip.*.id, count.index)}"
 }

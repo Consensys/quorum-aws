@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Starts a multi-region cluster
+
+set -euo pipefail
+
+die() {
+    echo >&2 "ERROR: $@"
+    exit 1
+}
+
+print_usage() {
+    die "usage: start-cluster [CLUSTER_NAME]"
+}
+
+[ "$#" -ne 1 ] && print_usage
+
+env=$1
+regions=(ireland tokyo virginia)
+
+# fetch EIPs
+
+eips=()
+for ((i = 0; i < ${#regions[@]}; ++i))
+do
+    region=${regions[$i]}
+    bin="${env}-${region}"
+    eip=$($bin output eip 2>/dev/null || die "could not get the EIP for $region. have you run '$bin apply' to provision infrastructure in $region?")
+    eips[$i]="${eip}"
+done
+
+# start tunnels from each region
+
+for ((i = 0; i < ${#regions[@]}; ++i))
+do
+    region=${regions[$i]}
+    eip=${eips[$i]}
+
+    echo "starting geth and constellation in $region"
+    ssh -oStrictHostKeyChecking=no ubuntu@"${eip}" -- ./start
+done

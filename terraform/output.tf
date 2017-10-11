@@ -23,3 +23,6 @@ output "geth3" { value = "${ var.multi_region ? "" : aws_instance.quorum.2.publi
 output "eip" {
   value = "${element(aws_eip_association.quorum_eip_association.*.public_ip, 0)}"
 }
+output "all_eips" {
+  value = ["${aws_eip_association.quorum_eip_association.*.public_ip}"]
+}

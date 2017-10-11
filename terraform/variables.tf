@@ -14,16 +14,13 @@ variable "secret_key" {
   # NOTE: this value comes from terraform.tfvars
   #
 }
-variable "ssh_keypair_name" {
-  description = "Name of the SSH keypair for logging into instances"
-  default = "quorum-cluster"
+variable "ssh_keypair_prefix" {
+  description = "Prefix of the SSH keypair for logging into instances, to be followed by the env (cluster) name"
+  default = "quorum-"
 }
 variable "tunnel_keypair_name" {
   description = "Name of the SSH keypair for tunneling between quorum nodes within AWS"
   default = "tunnel"
-}
-variable "pem_file" {
-  default = "secrets/quorum-cluster.pem"
 }
 variable "project" {
   default = "quorum-cluster"
@@ -78,12 +75,10 @@ variable "total_cluster_size" {
 variable "num_instances" {
   default = 3 # This is less than total_cluster_size when we are running a multi-region setup.
 }
-variable "quorum_eip_ids" {
-  description = "Pre-allocated elastic IP( ID)s to be associated with quorum nodes. This is primarily for supporting multi-region clusters."
-  default = []
-}
 variable "first_geth_id" {
   description = "Amount to add to the instance's count.index to calculate gethId. This is primarily for supporting multi-region clusters."
   default = 1
 }
+#
 # [End of variables overridden by multi-region settings.]
+#
