@@ -12,7 +12,7 @@ With a little bit of time and an AWS account, you should be able to use this pro
 
 - Installed software: [Docker](https://docs.docker.com/engine/installation/), [Terraform](https://www.terraform.io/intro/getting-started/install.html), [stack](https://docs.haskellstack.org/en/stable/README/#how-to-install), [jq](https://stedolan.github.io/jq/download/), and [awscli](https://aws.amazon.com/cli/)
 - awscli needs to be configured to talk to AWS (see the [user guide](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html) or use `aws configure help`)
-- `vim secrets/terraform.tfvars` to reflect AWS credentials in `~/.aws/credentials`
+- `vim terraform/secrets/terraform.tfvars` to reflect AWS credentials in `~/.aws/credentials`
 
 ### Building images
 
