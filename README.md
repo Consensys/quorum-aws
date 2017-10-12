@@ -18,6 +18,12 @@ With a little bit of time and an AWS account, you should be able to use this pro
 
 From the root of this project, you can execute the following two scripts in order to build Docker images for quorum, constellation, and quorum-aws. The latter will be built both locally and in docker (to be deployed to AWS.) We need to build and push these Docker images before we can run a cluster on AWS.
 
+If we haven't already, we need to pull Quorum and Constellation down into the `dependencies` directory:
+
+- `git submodule init && git submodule update`
+
+Then build the Docker images and push them to ECS repositories:
+
 - `./build && ./push`
 
 ### A note on how we are using Terraform
