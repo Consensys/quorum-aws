@@ -91,7 +91,12 @@ then
     terraform $1 -var "env=${env_name}" ${var_file_flag} -state ${state_file}
 elif [[ "$1" == "output" || "$1" == "taint" || "$1" == "untaint" ]]
 then
-    terraform $1 -state ${state_file} $2
+    if [[ "$#" -ne 2 ]]
+    then
+        print_usage
+    else
+        terraform $1 -state ${state_file} $2
+    fi
 elif [[ "$1" == "show" ]]
 then
     terraform show ${state_file}
