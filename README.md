@@ -67,7 +67,7 @@ For a given Terraform environment, we can use the normal Terraform commands like
 - `bin/demo plan` shows us what infrastructure will be provisioned if we decide to `apply`
 - `bin/demo apply` creates the infrastructure. In a single-region setting, this also automatically starts the Quorum cluster.
 - `bin/demo show` reports the current Terraform state for the environment
-- `bin/demo output` can print the value for an output variable listed in `output.tf`. e.g.: `bin/demo output geth1`. This can be handy to easily SSH into a node in the cluster: e.g. try `ssh ubuntu@(bin/demo output geth1)` or `ssh ubuntu@(bin/demo output geth2)`.
+- `bin/demo output` can print the value for an output variable listed in `output.tf`. e.g.: `bin/demo output geth1`. This can be handy to easily SSH into a node in the cluster: e.g. try `ssh ubuntu@$(bin/demo output geth1)` or `ssh ubuntu@$(bin/demo output geth2)`.
 
 Once SSH'd in to a node, we can use a few utility scripts that have been installed in the `ubuntu` user's homedir to interact with `geth`:
 
@@ -97,6 +97,6 @@ Once all three regions have been provisioned, we need to start the cluster. In s
 
 At this point, we should be able to log in to one of the nodes and see the cluster in action:
 
-- `ssh ubuntu@(bin/intl-virginia output eip)` where `eip` stands for Elastic IP, the static IP address other nodes in the cluster can use to connect to this one.
+- `ssh ubuntu@$(bin/intl-virginia output eip)` where `eip` stands for Elastic IP, the static IP address other nodes in the cluster can use to connect to this one.
 - `./spam 10` send in 10 transactions per second for a few seconds, then `^C` to stop it
 - `./follow` shows the end of the (`tail -f`/followed) `geth` log, or `./attach` attaches to the local node.
