@@ -4,4 +4,4 @@
 [submodule "dependencies/quorum"]
 	path = dependencies/quorum
 	url = https://github.com/jpmorganchase/quorum.git
-	branch = geth1.6
+	branch = geth1.7.0
