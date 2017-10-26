@@ -10,6 +10,9 @@ output "environment" {
 output "quorum-private-ips" {
   value = ["${aws_instance.quorum.*.private_ip}"]
 }
+output "quorum-public-ips" {
+  value = ["${aws_instance.quorum.*.public_ip}"]
+}
 output "quorum-azs" {
   value = ["${aws_instance.quorum.*.availability_zone}"]
 }

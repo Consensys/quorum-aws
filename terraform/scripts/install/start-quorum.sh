@@ -2,9 +2,11 @@
 
 set -euo pipefail
 
-# NOTE: this only works for clusters of size 9 or smaller:
-ID=$(cat node-id)
+gid=$(cat node-id)
+p2p_port=$((30400 + $gid))
+rpc_port=$((40400 + $gid))
+raft_port=$((50400 + $gid))
 
-echo "starting geth ${ID}"
+echo "starting geth ${gid}"
 
-sudo docker run -d -p 3040$ID:3040$ID -p 4040$ID:4040$ID -p 5040$ID:5040$ID -v /home/ubuntu/datadir:/datadir -v /home/ubuntu/password:/password -e PRIVATE_CONFIG='/datadir/constellation.toml' quorum --datadir /datadir --port 3040$ID --rpcport 4040$ID --raftport 5040$ID --networkid 1418 --verbosity 3 --nodiscover --rpc --rpccorsdomain "'*'" --rpcaddr '0.0.0.0' --raft --unlock 0 --password /password
+sudo docker run -d -p $p2p_port:$p2p_port -p $rpc_port:$rpc_port -p $raft_port:$raft_port -v /home/ubuntu/datadir:/datadir -v /home/ubuntu/password:/password -e PRIVATE_CONFIG='/datadir/constellation.toml' quorum --datadir /datadir --port $p2p_port --rpcport $rpc_port --raftport $raft_port --networkid 1418 --verbosity 3 --nodiscover --rpc --rpccorsdomain "'*'" --rpcaddr '0.0.0.0' --raft --unlock 0 --password /password

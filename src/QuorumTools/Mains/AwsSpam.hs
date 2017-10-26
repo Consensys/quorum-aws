@@ -32,19 +32,18 @@ cliParser = SpamConfig
 mkSingletonEnv :: MonadIO m => AwsClusterType -> GethId -> m ClusterEnv
 mkSingletonEnv cType gid = do
     key <- readAccountKey dataDir gid
-    return $ mkClusterEnv mkIp (const dataDir) (Map.singleton gid key)
+    subnets <- readNumSubnetsFromHomedir
+    return $ mkClusterEnv (mkIp subnets) (const dataDir) (Map.singleton gid key)
 
   where
-    --
-    -- TODO: fix/improve this
-    --
-    maxClusterSize = 10
-    numSubnets     = 3
     dataDir = DataDir "/datadir"
 
-    mkIp = case cType of
-      SingleRegion -> internalAwsIp maxClusterSize numSubnets
+    mkIp numSubnets = case cType of
+      SingleRegion -> internalAwsIp numSubnets
       MultiRegion  -> const dockerHostIp
+
+readNumSubnetsFromHomedir :: MonadIO m => m Int
+readNumSubnetsFromHomedir = liftIO $ read <$> readFile "/home/ubuntu/num-subnets"
 
 readGidFromHomedir :: IO GethId
 readGidFromHomedir = GethId . read <$> readFile "/home/ubuntu/node-id"

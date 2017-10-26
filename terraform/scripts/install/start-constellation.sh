@@ -3,19 +3,29 @@
 set -euo pipefail
 
 my_gid=$(cat node-id)
+my_port=$((9000 + $my_gid))
 cluster_type=$(cat cluster-type)
+num_subnets=$(cat num-subnets)
 
 wait_for_peer() {
     gid=$1
 
     if [[ $cluster_type == "multi-region" ]]
     then
-        endpoint="localhost:900${gid}"
+        port=$((9000 + $gid))
+        endpoint="localhost:${port}"
     else
         #
-        # FIXME: this only works for clusters up to size <= number of subnets.
+        # TODO: we should read these URLs from the constellation config file,
+        #       but it's TOML, which is hard to work with. if we read this from
+        #       TOML then we can remove the num-subnets file; nothing else needs
+        #       it.
         #
-        endpoint="10.0.${gid}.101:900${gid}"
+        idx=$(($gid-1))
+        subnet=$((1 + ($idx % $num_subnets)))
+        last_octet=$((101 + ($idx / $num_subnets)))
+        port=$((9000 + $gid))
+        endpoint="10.0.${subnet}.${last_octet}:${port}"
     fi
 
     until (curl -s "http://${endpoint}" >/dev/null); do
@@ -37,10 +47,10 @@ sleep 5
 
 echo "starting constellation ${my_gid}"
 
-# Start this constellation. This method of setting the port only works for
-# clusters of size 9 or smaller.
+# Start this constellation.
+
 sudo docker run -d \
-                -p 900${my_gid}:900${my_gid} \
+                -p ${my_port}:${my_port} \
                 -v /home/ubuntu/datadir:/datadir \
                 constellation \
                 /bin/sh -c "constellation-node /datadir/constellation.toml"

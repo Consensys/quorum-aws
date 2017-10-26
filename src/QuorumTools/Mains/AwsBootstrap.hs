@@ -38,7 +38,6 @@ mkBootstrapEnv config password keys = mkClusterEnv mkIp mkDataDir keys
 
   where
     dataRoot = rootDir config
-    size     = clusterSize config
     subnets  = numSubnets config
 
     mkDataDir (GethId gid) = DataDir $
@@ -47,7 +46,7 @@ mkBootstrapEnv config password keys = mkClusterEnv mkIp mkDataDir keys
     -- In the multi-region setting, since we are connecting to other nodes over
     -- the open internet, we do so through local SSH tunnels.
     mkIp = case clusterType config of
-      SingleRegion -> internalAwsIp size subnets
+      SingleRegion -> internalAwsIp subnets
       MultiRegion  -> const dockerHostIp
 
 awsBootstrapMain :: IO ()
