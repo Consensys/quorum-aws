@@ -1,3 +1,4 @@
 terraform/cluster-data/
 terraform/secrets/*
 terraform/state/*
+terraform/.terraform/plugins/

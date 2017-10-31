@@ -55,6 +55,12 @@ The pre-supplied binary wrappers have the following purposes:
 
 If you want, you can simply make a new symlink (in `terraform/bin`) to `terraform/bin/.bin/env-wrapper` named whatever you like (eg. `mycluster`), and then you can use that script to launch a new cluster with that name.
 
+### One-time: initialize Terraform plugins (for Terraform 0.10+)
+
+Because we're using the `aws` and `null` Terraform plugins, we need to initialize them:
+
+- `terraform init`
+
 ### One-time: deploy some "global" IAM infrastructure
 
 The following only needs to be done once to deploy some Identity and Access Management (IAM) infrastructure that we re-use across clusters:
