@@ -217,7 +217,7 @@ resource "aws_instance" "quorum" {
     user = "${var.remote_user}"
     host = "${self.public_ip}"
     timeout = "1m"
-    key_file = "secrets/ec2-keys/${var.ssh_keypair_prefix}${var.env}.pem"
+    private_key = "${file("secrets/ec2-keys/${var.ssh_keypair_prefix}${var.env}.pem")}"
   }
 
   provisioner "file" {
