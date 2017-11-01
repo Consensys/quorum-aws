@@ -4,4 +4,3 @@
 [submodule "dependencies/quorum"]
 	path = dependencies/quorum
 	url = https://github.com/jpmorganchase/quorum.git
-	branch = quorum-2-rc
