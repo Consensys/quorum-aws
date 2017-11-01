@@ -1,10 +1,10 @@
-resolver: lts-8.3
+resolver: nightly-2017-11-01 # for ghc 8.2
 
 packages:
 - '.'
 - location:
     git: https://github.com/jpmorganchase/quorum-tools.git
-    commit: 1a8d2a39ec8bfde23f751d6ae02cf3c04f49defb
+    commit: 5f3fb149b8efd1292d86c33bd566e3da82422125
   extra-dep: true
 #
 # FIXME: duplicated from quorum-tools:
@@ -18,18 +18,17 @@ packages:
 # FIXME: duplicated from quorum-tools:
 #
 extra-deps:
+- uri-bytestring-0.2.3.3
+- foldl-1.2.5
+- turtle-1.3.6
 - symmetric-properties-0.1.0.0
 - rate-limit-1.1.1
 - time-units-1.0.0
-- vector-0.12.0.0
-- wreq-0.5.0.1
-- authenticate-oauth-1.5.1.2
-- aeson-1.1.0.0
+- aeson-1.1.2.0
 - BerkeleyDB-0.8.7        # constellation
 - logging-3.0.4           # constellation
-- saltine-0.0.0.5         # constellation
-- cryptonite-0.22         # constellation
-- leveldb-haskell-0.6.5   # constellation
+- saltine-0.1.0.0         # constellation
+- cryptonite-0.24         # constellation
 
 flags: {}
 
