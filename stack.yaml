@@ -3,18 +3,15 @@ resolver: lts-8.3
 packages:
 - '.'
 - location:
-    #
-    # FIXME: once we merge geth1.6 into master in quorum-tools, change this back to the jpmorganchase repo. It seems that stack has a problem here where it checks out master.
-    #
-    git: https://github.com/bts/quorum-tools.git
-    commit: 4008858626caeebc3ab14c74e69f7b72cf179e6b
+    git: https://github.com/jpmorganchase/quorum-tools.git
+    commit: 1a8d2a39ec8bfde23f751d6ae02cf3c04f49defb
   extra-dep: true
 #
 # FIXME: duplicated from quorum-tools:
 #
 - location:
     git: https://github.com/jpmorganchase/constellation.git
-    commit: 67707bb2ad82e58390a279b77f6e23a7a05a7f97
+    commit: e268b075f5fb8fe8e485ff05cdf567216d76e7d8
   extra-dep: true
 
 #
@@ -32,6 +29,7 @@ extra-deps:
 - logging-3.0.4           # constellation
 - saltine-0.0.0.5         # constellation
 - cryptonite-0.22         # constellation
+- leveldb-haskell-0.6.5   # constellation
 
 flags: {}
 
