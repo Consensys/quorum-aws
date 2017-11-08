@@ -282,8 +282,7 @@ resource "aws_instance" "quorum" {
       "echo '${var.first_geth_id + count.index}' >node-id",
       "echo 'abcd' >password",
       "echo '${var.multi_region ? "multi-region" : "single-region"}' >cluster-type",
-      "echo '${var.total_cluster_size}' >cluster-size",
-      "echo '${length(var.subnet_azs)}' >num-subnets"
+      "echo '${var.total_cluster_size}' >cluster-size"
     ]
   }
 
