@@ -4,14 +4,14 @@ packages:
 - '.'
 - location:
     git: https://github.com/jpmorganchase/quorum-tools.git
-    commit: 5f3fb149b8efd1292d86c33bd566e3da82422125
+    commit: fe76791a6d49a5b5ea82566e6ce12acfdc3e0d06
   extra-dep: true
 #
 # FIXME: duplicated from quorum-tools:
 #
 - location:
     git: https://github.com/jpmorganchase/constellation.git
-    commit: e268b075f5fb8fe8e485ff05cdf567216d76e7d8
+    commit: 14997fbb8d5ae0b2db6ea182fcabad5d69ed7b23
   extra-dep: true
 
 #
