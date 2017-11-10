@@ -24,4 +24,4 @@ else
     multi_region_opt=""
 fi
 
-sudo docker run -it -v /home/ubuntu/datadir:/datadir -v /home/ubuntu/node-id:/home/ubuntu/node-id quorum-aws /bin/sh -c "aws-spam -r ${rps} ${multi_region_opt}"
+sudo docker run -it -v /home/ubuntu/datadir:/datadir -v /home/ubuntu/node-id:/home/ubuntu/node-id -v /home/ubuntu/num-subnets:/home/ubuntu/num-subnets quorum-aws /bin/sh -c "aws-spam -r ${rps} ${multi_region_opt}"
