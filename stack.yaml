@@ -2,10 +2,12 @@ resolver: nightly-2017-11-01 # for ghc 8.2
 
 packages:
 - '.'
+#- '../quorum-tools'
 - location:
     git: https://github.com/jpmorganchase/quorum-tools.git
-    commit: fe76791a6d49a5b5ea82566e6ce12acfdc3e0d06
+    commit: 838887d26a6da1267e912102ef0fcedc37e2249a
   extra-dep: true
+
 #
 # FIXME: duplicated from quorum-tools:
 #
@@ -25,6 +27,7 @@ extra-deps:
 - rate-limit-1.1.1
 - time-units-1.0.0
 - aeson-1.1.2.0
+- async-pool-0.9.0.2
 - BerkeleyDB-0.8.7        # constellation
 - logging-3.0.4           # constellation
 - saltine-0.1.0.0         # constellation
