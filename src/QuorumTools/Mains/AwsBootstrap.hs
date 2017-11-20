@@ -13,13 +13,15 @@ import           Turtle
 
 import           QuorumTools.Aws
 import           QuorumTools.Cluster
+import           QuorumTools.Options  (consensusParser)
 import           QuorumTools.Types
 
 data AwsConfig
-  = AwsConfig { numSubnets  :: Int
-              , rootDir     :: FilePath
-              , clusterType :: AwsClusterType
-              , clusterSize :: Int
+  = AwsConfig { numSubnets       :: Int
+              , rootDir          :: FilePath
+              , clusterType      :: AwsClusterType
+              , clusterSize      :: Int
+              , clusterConsensus :: Consensus
               }
 
 cliParser :: Parser AwsConfig
@@ -29,23 +31,25 @@ cliParser = AwsConfig
   <*> fmap (bool SingleRegion MultiRegion)
            (switch  "multi-region" 'm' "Whether the cluster is multi-region")
   <*> optInt "cluster-size"   'n' "Total cluster size across all regions"
+  <*> consensusParser
 
 mkBootstrapEnv :: AwsConfig -> Password -> Map GethId AccountKey -> ClusterEnv
-mkBootstrapEnv config password keys = mkClusterEnv mkIp mkDataDir keys
+mkBootstrapEnv cfg password keys = mkClusterEnv mkIp mkDataDir keys consensus
     & clusterGenesisJson    .~ dataRoot </> "genesis.json"
     & clusterPrivacySupport .~ PrivacyEnabled
     & clusterPassword       .~ password
 
   where
-    dataRoot = rootDir config
-    subnets  = numSubnets config
+    consensus = clusterConsensus cfg
+    dataRoot = rootDir cfg
+    subnets  = numSubnets cfg
 
     mkDataDir (GethId gid) = DataDir $
       dataRoot </> fromText (format ("geth"%d) gid)
 
     -- In the multi-region setting, since we are connecting to other nodes over
     -- the open internet, we do so through local SSH tunnels.
-    mkIp = case clusterType config of
+    mkIp = case clusterType cfg of
       SingleRegion -> internalAwsIp subnets
       MultiRegion  -> const dockerHostIp
 

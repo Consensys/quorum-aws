@@ -5,7 +5,7 @@ packages:
 #- '../quorum-tools'
 - location:
     git: https://github.com/jpmorganchase/quorum-tools.git
-    commit: 838887d26a6da1267e912102ef0fcedc37e2249a
+    commit: 337d92414cac248d10e8ee583eb7adaea5c2d0be
   extra-dep: true
 
 #

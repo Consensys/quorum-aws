@@ -33,7 +33,10 @@ mkSingletonEnv :: MonadIO m => AwsClusterType -> GethId -> m ClusterEnv
 mkSingletonEnv cType gid = do
     key <- readAccountKey dataDir gid
     subnets <- readNumSubnetsFromHomedir
-    return $ mkClusterEnv (mkIp subnets) (const dataDir) (Map.singleton gid key)
+    return $ mkClusterEnv (mkIp subnets)
+                          (const dataDir)
+                          (Map.singleton gid key)
+                          dummyConsensus
 
   where
     dataDir = DataDir "/datadir"
@@ -41,6 +44,12 @@ mkSingletonEnv cType gid = do
     mkIp numSubnets = case cType of
       SingleRegion -> internalAwsIp numSubnets
       MultiRegion  -> const dockerHostIp
+
+    -- HACK: I think we can get away with just putting any consensus for now,
+    -- but we should try to read this from configuration on the box. On this
+    -- note, instead of having multiple files in the homedir, we should have
+    -- one single config file:
+    dummyConsensus = Raft
 
 readNumSubnetsFromHomedir :: MonadIO m => m Int
 readNumSubnetsFromHomedir = liftIO $ read <$> readFile "/home/ubuntu/num-subnets"
