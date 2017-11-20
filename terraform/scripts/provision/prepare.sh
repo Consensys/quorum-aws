@@ -3,7 +3,7 @@
 set -e
 set -u
 
-echo "installing docker, the aws cli, and jq"
+echo "installing docker, the aws cli, rlwrap, and jq"
 
 sudo apt-get update -y >/dev/null
 sudo apt-get install -y apt-transport-https ca-certificates >/dev/null
@@ -11,7 +11,7 @@ sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58
 sudo sh -c 'echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" > /etc/apt/sources.list.d/docker.list' >/dev/null
 sudo apt-get update -y >/dev/null
 sudo apt-get install -y linux-aws linux-headers-aws linux-image-aws >/dev/null
-sudo apt-get install -y docker-engine awscli jq >/dev/null
+sudo apt-get install -y docker-engine awscli rlwrap jq >/dev/null
 
 echo "configuring awscli"
 
