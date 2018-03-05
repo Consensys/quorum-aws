@@ -1,4 +1,4 @@
-resolver: nightly-2017-11-01 # for ghc 8.2
+resolver: lts-10.7
 
 packages:
 - '.'
@@ -32,6 +32,8 @@ extra-deps:
 - logging-3.0.4           # constellation
 - saltine-0.1.0.0         # constellation
 - cryptonite-0.24         # constellation
+- ansi-terminal-0.6.3.1
+- unix-compat-0.4.3.1
 
 flags: {}
 
