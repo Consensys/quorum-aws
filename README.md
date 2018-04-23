@@ -26,6 +26,10 @@ Then build the Docker images and push them to ECS repositories:
 
 - `./build && ./push`
 
+#### Building issues
+Error 137 is generally a sign that you should configure Docker with more memory.
+
+
 ### A note on how we are using Terraform
 
 In order to manage terraformed infrastructure across different regions and clusters, instead of using the `terraform` binary directly, we use (symlinks to) a wrapper script (around the `terraform` binary) to automatically set variables and state output locations per environment. Take a look inside `terraform/bin` to see how this works:
