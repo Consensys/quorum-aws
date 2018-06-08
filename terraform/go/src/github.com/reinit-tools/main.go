@@ -16,7 +16,7 @@ import (
   "github.com/ethereum/go-ethereum/params"
   "github.com/ethereum/go-ethereum/rlp"
 )
-
+//
 func main() {
   var nodekeys []string;
   // Get list of nodekeys from input

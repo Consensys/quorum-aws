@@ -1,8 +1,7 @@
 #!/bin/bash
-
+# For reinitializing docker container into istanbul mode
 set -euo pipefail
 
-#
 cluster_size=$2
 local_data_root=$1
 terra_root=$(pwd)

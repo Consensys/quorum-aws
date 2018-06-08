@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Prints the status of a blockchain.
 set -euo pipefail
 
 cur=$(date +"%Y/%m/%d %H:%M:%S")
