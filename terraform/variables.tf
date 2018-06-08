@@ -70,10 +70,10 @@ variable "subnet_azs" {
   default = ["us-east-1b", "us-east-1c", "us-east-1d"]
 }
 variable "total_cluster_size" {
-  default = 3 # Number of quorum nodes in this cluster across all aws regions.
+  default = 5 # Number of quorum nodes in this cluster across all aws regions.
 }
 variable "num_instances" {
-  default = 3 # This is less than total_cluster_size when we are running a multi-region setup.
+  default = 5 # This is less than total_cluster_size when we are running a multi-region setup.
 }
 variable "first_geth_id" {
   description = "Amount to add to the instance's count.index to calculate gethId. This is primarily for supporting multi-region clusters."
