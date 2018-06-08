@@ -18,14 +18,14 @@ output "quorum-azs" {
 }
 
 # Output for single-region IPs
-output "geth1" { value = "${ var.multi_region ? "" : aws_instance.quorum.0.public_ip }" }
-output "geth2" { value = "${ var.multi_region ? "" : aws_instance.quorum.1.public_ip }" }
-output "geth3" { value = "${ var.multi_region ? "" : aws_instance.quorum.2.public_ip }" }
+#output "geth1" { value = "${ var.multi_region ? "" : aws_instance.quorum.0.public_ip }" }
+#output "geth2" { value = "${ var.multi_region ? "" : aws_instance.quorum.1.public_ip }" }
+#output "geth3" { value = "${ var.multi_region ? "" : aws_instance.quorum.2.public_ip }" }
 
 # Output for multi-region IP
-output "eip" {
-  value = "${element(aws_eip_association.quorum_eip_association.*.public_ip, 0)}"
-}
-output "all_eips" {
-  value = ["${aws_eip_association.quorum_eip_association.*.public_ip}"]
-}
+#output "eip" {
+#  value = "${element(aws_eip_association.quorum_eip_association.*.public_ip, 0)}"
+#}
+#output "all_eips" {
+#  value = ["${aws_eip_association.quorum_eip_association.*.public_ip}"]
+#}
