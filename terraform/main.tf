@@ -174,6 +174,11 @@ resource "null_resource" "cluster_datadirs" {
   provisioner "local-exec" {
     command = "${var.multi_region ? (var.first_geth_id == "1" ? "stack exec -- aws-bootstrap --cluster-size ${var.total_cluster_size} --subnets ${length(var.subnet_azs)} --path ${var.local_datadir_root} --multi-region" : "echo skipping datadir creation for multi-region cluster beyond the first region") : "stack exec -- aws-bootstrap --cluster-size ${var.total_cluster_size} --subnets ${length(var.subnet_azs)} --path ${var.local_datadir_root}" }"
   }
+
+  provisioner "local-exec" {
+    command = "./scripts/reinit.sh ${var.local_datadir_root} ${var.num_instances}"
+  }
+
 }
 
 resource "aws_key_pair" "quorum" {
@@ -270,6 +275,16 @@ resource "aws_instance" "quorum" {
     destination = "${var.remote_homedir}/start"
   }
 
+  provisioner "file" {
+    source = "scripts/print.sh"
+    destination = "${var.remote_homedir}/print"
+  }
+
+  provisioner "file" {
+    source = "cluster-data/genesis.json"
+    destination = "${var.remote_homedir}/datadir/genesis.json"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "chmod +x spam",
@@ -279,6 +294,7 @@ resource "aws_instance" "quorum" {
       "chmod +x .start-constellation",
       "chmod +x .start-quorum",
       "chmod +x start",
+      "chmod +x print",
       "echo '${var.first_geth_id + count.index}' >node-id",
       "echo 'abcd' >password",
       "echo '${var.multi_region ? "multi-region" : "single-region"}' >cluster-type",
