@@ -169,10 +169,15 @@ resource "null_resource" "cluster_datadirs" {
     num_instances = "${var.num_instances}"
     subnet_azs = "${join(",", var.subnet_azs)}"
     local_datadir_root = "${var.local_datadir_root}"
+    consensus_mode = "${var.consensus_mode}"
   }
 
   provisioner "local-exec" {
     command = "${var.multi_region ? (var.first_geth_id == "1" ? "stack exec -- aws-bootstrap --cluster-size ${var.total_cluster_size} --subnets ${length(var.subnet_azs)} --path ${var.local_datadir_root} --multi-region" : "echo skipping datadir creation for multi-region cluster beyond the first region") : "stack exec -- aws-bootstrap --cluster-size ${var.total_cluster_size} --subnets ${length(var.subnet_azs)} --path ${var.local_datadir_root}" }"
+  }
+
+  provisioner "local-exec" {
+    command= "./scripts/init.sh ${var.local_datadir_root} ${var.num_instances} ${var.consensus_mode}"
   }
 }
 
@@ -218,6 +223,10 @@ resource "aws_instance" "quorum" {
     host = "${self.public_ip}"
     timeout = "1m"
     private_key = "${file("secrets/ec2-keys/${var.ssh_keypair_prefix}${var.env}.pem")}"
+  }
+  provisioner "file" {
+    source = "${var.local_datadir_root}/genesis.json"
+    destination = "${var.remote_homedir}"
   }
 
   provisioner "file" {
@@ -291,7 +300,7 @@ resource "aws_instance" "quorum" {
     scripts = [
       "scripts/provision/prepare.sh",
       "scripts/provision/fetch-images.sh",
-      "scripts/provision/start-single-region-cluster.sh"
+      "scripts/provision/start-single-region-cluster.sh ${var.consensus_mode}"
     ]
   }
 }
