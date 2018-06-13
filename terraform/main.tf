@@ -224,14 +224,15 @@ resource "aws_instance" "quorum" {
     timeout = "1m"
     private_key = "${file("secrets/ec2-keys/${var.ssh_keypair_prefix}${var.env}.pem")}"
   }
-  provisioner "file" {
-    source = "${var.local_datadir_root}/genesis.json"
-    destination = "${var.remote_homedir}"
-  }
 
   provisioner "file" {
     source = "${var.local_datadir_root}/geth${var.first_geth_id + count.index}"
     destination = "${var.remote_homedir}/datadir"
+  }
+
+    provisioner "file" {
+    source = "${var.local_datadir_root}/genesis.json"
+    destination = "${var.remote_homedir}/datadir/genesis.json"
   }
 
   provisioner "file" {
@@ -279,6 +280,11 @@ resource "aws_instance" "quorum" {
     destination = "${var.remote_homedir}/start"
   }
 
+  provisioner "file" {
+    source = "scripts/provision/start-single-region-cluster.sh"
+    destination = "${var.remote_homedir}/start-single-region-cluster"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "chmod +x spam",
@@ -299,8 +305,15 @@ resource "aws_instance" "quorum" {
   provisioner "remote-exec" {
     scripts = [
       "scripts/provision/prepare.sh",
-      "scripts/provision/fetch-images.sh",
-      "scripts/provision/start-single-region-cluster.sh ${var.consensus_mode}"
+      "scripts/provision/fetch-images.sh"
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x ${var.remote_homedir}/start-single-region-cluster",
+      "${var.remote_homedir}/start-single-region-cluster ${var.consensus_mode}" ,
+      "rm ${var.remote_homedir}/start-single-region-cluster"
     ]
   }
 }

@@ -24,6 +24,6 @@ then
                 -e PRIVATE_CONFIG='/datadir/constellation.toml' \
                 -it --entrypoint='/bin/sh' quorum -c "printf 'y\ny'| geth removedb --datadir /datadir && geth --datadir /datadir init /datadir/genesis.json && geth --datadir /datadir --maxpeers '50' --nodiscover --syncmode full --mine --port ${p2p_port} --rpcport ${rpc_port} --verbosity 3 --nodiscover --rpc --rpccorsdomain '*' --rpcaddr 0.0.0.0 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul --unlock 0 --password /password"
 else
-  echo "Please choose either istanbul or raft"
+  echo "Error"
   exit 1
 fi

@@ -14,7 +14,7 @@ then
   exit 0
 elif [[ $3 == "istanbul" ]]
 then
-  istanbul_tools_bin='../../dependencies/istanbul-tools/bin'
+  istanbul_tools_bin='../../dependencies/istanbul-tools/build/bin'
 
   # Gathering node keys
   nodekeys=""
@@ -26,7 +26,6 @@ then
     nodekeys+=","
     iterator=$((iterator+1))
   done
-  echo ${nodekeys%?}
   # Generating new genesis file
   ${istanbul_tools_bin}/istanbul reinit --quorum --nodekey ${nodekeys%?} > ${local_data_root}/genesis.json
   echo "Initialized genesis in Istanbul Mode"
