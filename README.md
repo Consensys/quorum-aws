@@ -1,3 +1,8 @@
+-------------
+## Please note that this project is no longer supported. For more up to date cloud deployment tool please proceed to https://github.com/jpmorganchase/quorum-cloud
+-------------
+
+
 # quorum-aws
 
 This repo contains the tools we use to deploy test Quorum clusters to AWS.
