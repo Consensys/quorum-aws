@@ -1,9 +1,16 @@
--------------
-## Please note that this project is no longer supported. For more up to date cloud deployment tool please proceed to https://github.com/jpmorganchase/quorum-cloud
--------------
-
-
 # quorum-aws
+
+## ⚠️ Project Deprecation Notice ⚠️
+
+Quorum-AWS has been deprecated, and we are no longer supporting the project.
+
+It has been replaced by [quorum-terraform](https://github.com/ConsenSys/quorum-terraform) that offers wider compatibility with Quorum products and cloud providers
+
+We encourage all users with active projects to migrate to [quorum-terraform](https://github.com/ConsenSys/quorum-terraform)
+
+If you have any questions or concerns, please reach out to the ConsenSys protocol engineering team on [#Discord](https://chat.consensys.net) or by [email](mailto:quorum@consensys.net).
+
+### Description
 
 This repo contains the tools we use to deploy test Quorum clusters to AWS.
 
